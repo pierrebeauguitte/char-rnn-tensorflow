@@ -5,9 +5,21 @@ import argparse
 import time
 import os
 import cPickle
+import sys
 
 from utils import TextLoader
 from model import Model
+
+class Unbuffered(object):
+    def __init__(self, stream):
+        self.stream = stream
+    def write(self, data):
+        self.stream.write(data)
+        self.stream.flush()
+    def __getattr__(self, attr):
+        return getattr(self.stream, attr)
+
+sys.stdout = Unbuffered(sys.stdout)
 
 def main():
     parser = argparse.ArgumentParser()
